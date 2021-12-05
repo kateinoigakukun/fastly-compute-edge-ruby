@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
+
+(
+    cd $ROOT_DIR/ext/fastly/compute_edge && \
+    # add extra -I to fake mkmf for cross compile
+    # fake.rb is used to fake mkmf to force static linking
+    ruby --disable=gems \
+        -I/Users/katei/.ghq/github.com/ruby/ruby/lib \
+        -I$ROOT_DIR/.rbwasm/cache/ruby-a3354134e1d1c1a9/embd-root/ruby/lib/ruby/3.1.0/wasm32-wasi \
+        -r$ROOT_DIR/fake.rb ./extconf.rb && \
+    make
+)
+
+mkdir -p $ROOT_DIR/pkg
+rbwasm -o $ROOT_DIR/pkg/ruby.wasm \
+    --cruby-src path:../../ruby/ruby \
+    --Xlinker $ROOT_DIR/ext/fastly/compute_edge/compute_edge.o
