@@ -10,3 +10,4 @@
 /ext/**/*.o
 /ext/**/Makefile
 /.rbwasm
+/dist

@@ -3,7 +3,7 @@
 ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
 
 (
-    cd $ROOT_DIR/ext/fastly/compute_edge && \
+    cd $ROOT_DIR/ext/fastly/compute_edge_core && \
     # add extra -I to fake mkmf for cross compile
     # fake.rb is used to fake mkmf to force static linking
     ruby --disable=gems \
@@ -14,6 +14,9 @@ ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
 )
 
 mkdir -p $ROOT_DIR/pkg
-rbwasm -o $ROOT_DIR/pkg/ruby.wasm \
+rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     --cruby-src path:../../ruby/ruby \
-    --Xlinker $ROOT_DIR/ext/fastly/compute_edge/compute_edge.o
+    --mapdir /exe::$ROOT_DIR/exe \
+    --mapdir /lib::$ROOT_DIR/lib \
+    --Xlinker $ROOT_DIR/ext/fastly/compute_edge_core/compute_edge_core.o \
+    -- -I/embd-root/lib /embd-root/exe/demo.rb

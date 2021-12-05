@@ -78,8 +78,8 @@ Init_fastly_compute_edge(void)
 {
   printf("load Init_fastly_compute_edge\n");
   rb_mFastly = rb_define_module("Fastly");
-  VALUE rb_mResponse = rb_define_module_under(rb_mFastly, "Response");
-  VALUE rb_mBody = rb_define_module_under(rb_mFastly, "Body");
+  VALUE rb_mResponse = rb_define_class_under(rb_mFastly, "Response", rb_cObject);
+  VALUE rb_mBody = rb_define_class_under(rb_mFastly, "Body", rb_cObject);
 
   rb_define_module_function(rb_mResponse, "fastly_http_resp_new", _fastly_http_resp_new, 0);
   rb_define_module_function(rb_mResponse, "fastly_http_resp_send_downstream", _fastly_http_resp_send_downstream, 3);
@@ -96,5 +96,5 @@ void ruby_init_ext(const char *name, void (*init)(void));
 
 void Init_gemext(void) {
   printf("load Init_gemext\n");
-  init(Init_fastly_compute_edge, "fastly/compute_edge");
+  init(Init_fastly_compute_edge, "fastly/compute_edge_core");
 }

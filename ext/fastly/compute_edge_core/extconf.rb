@@ -2,4 +2,4 @@
 
 require "mkmf"
 
-create_makefile("fastly/compute_edge")
+create_makefile("fastly/compute_edge_core")
