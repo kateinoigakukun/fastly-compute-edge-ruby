@@ -14,8 +14,18 @@ ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
 )
 
 mkdir -p $ROOT_DIR/pkg
+export TRANSIENT_HEAP_TOTAL_SIZE=1048576
 rbwasm -o $ROOT_DIR/dist/ruby.wasm \
+    -g \
+    --stack-size 8388608 \
+    --asyncify-stack-size 4096 \
+    --enabled-exts json,json/generator,json/parser \
     --cruby-src path:../../ruby/ruby \
+    --no-builtin-files \
+    --mapdir @ruby_root/lib/ruby/3.1.0/json::@ruby_root/lib/ruby/3.1.0/json \
+    --mapdir @ruby_root/lib/ruby/3.1.0/json.rb::@ruby_root/lib/ruby/3.1.0/json.rb \
+    --mapdir @ruby_root/lib/ruby/3.1.0/ostruct.rb::@ruby_root/lib/ruby/3.1.0/ostruct.rb \
+    --mapdir @ruby_root/lib/ruby/3.1.0/wasm32-wasi::@ruby_root/lib/ruby/3.1.0/wasm32-wasi \
     --mapdir /exe::$ROOT_DIR/exe \
     --mapdir /lib::$ROOT_DIR/lib \
     --Xlinker $ROOT_DIR/ext/fastly/compute_edge_core/compute_edge_core.o \
