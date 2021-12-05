@@ -11,3 +11,4 @@
 /ext/**/Makefile
 /.rbwasm
 /dist
+/fastly.toml
