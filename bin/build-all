@@ -13,8 +13,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
     make
 )
 
-mkdir -p $ROOT_DIR/pkg
-export TRANSIENT_HEAP_TOTAL_SIZE=1048576
+mkdir -p $ROOT_DIR/dist
 rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     -g \
     --stack-size 8388608 \
@@ -28,5 +27,6 @@ rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     --mapdir @ruby_root/lib/ruby/3.1.0/wasm32-wasi::@ruby_root/lib/ruby/3.1.0/wasm32-wasi \
     --mapdir /exe::$ROOT_DIR/exe \
     --mapdir /lib::$ROOT_DIR/lib \
+    --Xcc -DTRANSIENT_HEAP_TOTAL_SIZE=1048576 \
     --Xlinker $ROOT_DIR/ext/fastly/compute_edge_core/compute_edge_core.o \
     -- -I/embd-root/lib /embd-root/exe/demo.rb
