@@ -2,17 +2,6 @@
 
 ROOT_DIR="$(cd "$(dirname "$0")/../" && pwd)"
 
-(
-    cd $ROOT_DIR/ext/fastly/compute_edge_core && \
-    # add extra -I to fake mkmf for cross compile
-    # fake.rb is used to fake mkmf to force static linking
-    ruby --disable=gems \
-        -I/Users/katei/.ghq/github.com/ruby/ruby/lib \
-        -I$ROOT_DIR/.rbwasm/cache/ruby-a3354134e1d1c1a9/embd-root/ruby/lib/ruby/3.1.0/wasm32-wasi \
-        -r$ROOT_DIR/fake.rb ./extconf.rb && \
-    make
-)
-
 mkdir -p $ROOT_DIR/dist
 rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     -g \
@@ -27,6 +16,7 @@ rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     --mapdir @ruby_root/lib/ruby/3.1.0/wasm32-wasi::@ruby_root/lib/ruby/3.1.0/wasm32-wasi \
     --mapdir /exe::$ROOT_DIR/exe \
     --mapdir /lib::$ROOT_DIR/lib \
-    --Xcc -DTRANSIENT_HEAP_TOTAL_SIZE=1048576 \
+    --build-hook $ROOT_DIR/bin/build-ext-obj \
+    --Xcc='-DTRANSIENT_HEAP_TOTAL_SIZE=1048576' \
     --Xlinker $ROOT_DIR/ext/fastly/compute_edge_core/compute_edge_core.o \
     -- -I/embd-root/lib /embd-root/exe/demo.rb
