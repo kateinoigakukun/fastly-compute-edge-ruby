@@ -7,8 +7,8 @@ rbwasm -o $ROOT_DIR/dist/ruby.wasm \
     -g \
     --stack-size 8388608 \
     --asyncify-stack-size 4096 \
+    --cruby-src github:kateinoigakukun/ruby@cf7051325cc2a4474bd424a3387e2f1ce63df0a8 \
     --enabled-exts json,json/generator,json/parser \
-    --cruby-src path:../../ruby/ruby \
     --no-builtin-files \
     --mapdir @ruby_root/lib/ruby/3.1.0/json::@ruby_root/lib/ruby/3.1.0/json \
     --mapdir @ruby_root/lib/ruby/3.1.0/json.rb::@ruby_root/lib/ruby/3.1.0/json.rb \
